@@ -64,16 +64,24 @@ namespace LogInsight
         /// <summary>
         /// Write in Event Viewer and file
         /// </summary>
-        public static void WriteLog(string message, EventLogEntryType type)
+        public static void WriteLog(string message, EventLogEntryType type, bool inEventViewer = false)
         {
             try
             {
-                using (EventLog eventLog = new EventLog(WinLogName))
+                if(inEventViewer)
                 {
-                    eventLog.Source = SourceName;
-                    eventLog.WriteEntry(message, type);
+                    using (EventLog eventLog = new EventLog(WinLogName))
+                    {
+                        eventLog.Source = SourceName;
+                        eventLog.WriteEntry(message, type);
+                        LogToFile(message, type);
+                    }
+                }
+                else
+                {
                     LogToFile(message, type);
                 }
+               
             }
             catch (Exception ex)
             {

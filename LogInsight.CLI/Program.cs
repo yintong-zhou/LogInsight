@@ -13,6 +13,8 @@ namespace LogInsight.CLI
 {
     class Program
     {
+        static bool eventViewer = bool.Parse(ConfigurationManager.AppSettings["EnableEventViewer"]);
+
         static void Main(string[] args)
         {
             Console.WriteLine($"{Event.SourceName}");
@@ -48,13 +50,13 @@ namespace LogInsight.CLI
                 {
                     Event.UseSource();
                     Console.WriteLine("Logging INFORMATION");
-                    Event.WriteLog("Logging INFORMATION", EventLogEntryType.Information);
+                    Event.WriteLog("Logging INFORMATION", EventLogEntryType.Information, eventViewer);
 
                     Console.WriteLine("Logging WARNING");
-                    Event.WriteLog("Logging WARNING", EventLogEntryType.Warning);
+                    Event.WriteLog("Logging WARNING", EventLogEntryType.Warning, eventViewer);
 
                     Console.WriteLine("Logging ERROR");
-                    Event.WriteLog("Logging ERROR", EventLogEntryType.Error);
+                    Event.WriteLog("Logging ERROR", EventLogEntryType.Error, eventViewer);
 
                     Console.WriteLine($"Done! Check in Event Viewer and here: {Environment.CurrentDirectory}/{Event.WinLogName}");
                 }
