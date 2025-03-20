@@ -13,11 +13,9 @@ namespace LogInsight.CLI
 {
     class Program
     {
-        static bool eventViewer = bool.Parse(ConfigurationManager.AppSettings["EnableEventViewer"]);
-
         static void Main(string[] args)
         {
-            Console.WriteLine($"{Event.SourceName}");
+            Console.WriteLine($"{Event.AppName}");
 
             while (true)
             {
@@ -50,15 +48,15 @@ namespace LogInsight.CLI
                 {
                     Event.UseSource();
                     Console.WriteLine("Logging INFORMATION");
-                    Event.WriteLog("Logging INFORMATION", EventLogEntryType.Information, eventViewer);
+                    Event.WriteLog("Logging INFORMATION", EventLogEntryType.Information);
 
                     Console.WriteLine("Logging WARNING");
-                    Event.WriteLog("Logging WARNING", EventLogEntryType.Warning, eventViewer);
+                    Event.WriteLog("Logging WARNING", EventLogEntryType.Warning);
 
                     Console.WriteLine("Logging ERROR");
-                    Event.WriteLog("Logging ERROR", EventLogEntryType.Error, eventViewer);
+                    Event.WriteLog("Logging ERROR", EventLogEntryType.Error);
 
-                    Console.WriteLine($"Done! Check in Event Viewer and here: {Environment.CurrentDirectory}/{Event.WinLogName}");
+                    Console.WriteLine($"Done! Check in Event Viewer and here: {Environment.CurrentDirectory}\\");
                 }
                 else if (cmd.StartsWith(CmdType.Read))
                 {
@@ -75,7 +73,7 @@ namespace LogInsight.CLI
                         var events = Event.ReadFromFile();
                         foreach (var item in events)
                         {
-                            Console.WriteLine($"{item.DateTime} [{item.LogEntryType}] {item.Message}");
+                            Console.WriteLine($"{item.DateTime} [{item.LogEntryType}] {item.Source}|{item.AppName}|{item.Message}");
                         }
                     }
                     else
