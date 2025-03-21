@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Log Insight</title>
-    <link href="~/Content/imgs/activity.svg" rel="icon" type="image/x-icon"/>
+    <link href="~/Content/imgs/activity.svg" rel="icon" type="image/x-icon" />
     <link href="~/Content/fonts/Gidole-Regular.ttf" rel="stylesheet" />
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
@@ -22,10 +22,10 @@
                         <a class="nav-link" aria-current="page" href="@Url.Action("Index", "Home")">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Dashboard</a>
+                        <a class="nav-link" href="@Url.Action("Index", "Dashboard")">Dashboard</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">LogView</a>
+                        <a class="nav-link" href="@Url.Action("Index", "Logview")">LogView</a>
                     </li>
                 </ul>
                 <span class="navbar-text">
@@ -39,8 +39,14 @@
         @RenderBody()
     </div>
 
+    <footer class="fixed-bottom py-1 m-1">
+        <div class="container text-center">
+            &copy; @DateTime.Now.Year Log Insight
+        </div>
+    </footer>
+
     @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/js")
     @RenderSection("scripts", required: false)
 </body>
 </html>

@@ -1,0 +1,11 @@
+﻿@model LogInsight.Web.Models.LogData
+
+@{
+    ViewBag.Title = "View";
+}
+
+@Html.Partial("_LogFilter", Model)
+
+<hr />
+
+@Html.Partial("_LogTable", Model)

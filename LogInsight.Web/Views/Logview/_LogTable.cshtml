@@ -1,0 +1,35 @@
+﻿@model LogInsight.Web.Models.LogData
+
+<table id="log-table" class="table table-sm table-responsive-sm" style="width:100%">
+    <thead>
+        <tr>
+            <th>Time</th>
+            <th>Level</th>
+            <th>Application</th>
+            <th>Source</th>
+            <th>Message</th>
+    </thead>
+    <tbody class="table-group-divider">
+        @foreach (var log in Model.logList)
+        {
+            <tr>
+                <td>@log.DateTime.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                @if (log.Level.ToUpper() == "INFORMATION")
+                {
+                    <td><span class="badge text-bg-primary">INFO</span></td>
+                }
+                else if (log.Level.ToUpper() == "WARNING")
+                {
+                    <td><span class="badge text-bg-warning">WARNING</span></td>
+                }
+                else if (log.Level.ToUpper() == "ERROR")
+                {
+                    <td><span class="badge text-bg-danger">ERROR</span></td>
+                }
+                <td>@log.AppName</td>
+                <td>@log.Source</td>
+                <td>@log.Message</td>
+            </tr>
+        }
+    </tbody>
+</table>

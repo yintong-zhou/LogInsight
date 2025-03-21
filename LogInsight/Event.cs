@@ -114,7 +114,7 @@ namespace LogInsight
         {
             try
             {
-                CheckLogFile();
+                //CheckLogFile();
                 File.AppendAllText($"{Environment.CurrentDirectory}\\{FallbackLogFile}", $"{DateTime.Now}|{type}|{source}|{appName}|{message}{Environment.NewLine}"); 
             }
             catch (Exception ex)
@@ -164,12 +164,16 @@ namespace LogInsight
             return null;
         }
 
-        public static List<LogData> ReadFromFile()
+        public static List<LogData> ReadFromFile(bool ignoreDefaultPath = false)
         {
             try
             {
                 List<LogData> data = new List<LogData>();
-                string[] lines = File.ReadAllLines($"{Environment.CurrentDirectory}\\{FallbackLogFile}");
+                string[] lines = { };
+                if (ignoreDefaultPath)
+                    lines = File.ReadAllLines($"{ConfigurationManager.AppSettings["LogDirectory"]}");
+                else lines = File.ReadAllLines($"{Environment.CurrentDirectory}\\{FallbackLogFile}");
+
                 foreach (var line in lines)
                 {
                     string[] parts = line.Split('|');

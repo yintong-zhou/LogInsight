@@ -2,6 +2,35 @@
     ViewBag.Title = "Home";
 }
 
-<div class="">
-    BODY
+<div class="text-center mb-5">
+    <h2>Log Insight</h2>
+    <p class="lead">
+        A solution for monitoring and analyzing logs.
+    </p>
 </div>
+
+<div class="row g-4 ml-5 justify-content-center">
+    <div class="col-md-6 col-lg-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h2 class="card-title d-flex align-items-center gap-2 h5 mb-3">
+                    <i class="bi bi-speedometer2"></i> Dashboard
+                </h2>
+                <p class="card-text">View all main KPI for your analysis</p>
+                <a class="btn btn-sm btn-outline-dark" href="@Url.Action("Index", "Dashboard")">Go</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-lg-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h2 class="card-title d-flex align-items-center gap-2 h5 mb-3">
+                    <i class="bi bi-search"></i> Log View
+                </h2>
+                <p class="card-text">Search, filter and analyze the logs.</p>
+                <a class="btn btn-sm btn-outline-dark" href="@Url.Action("Index", "Logview")">Go</a>
+            </div>
+        </div>
+    </div>
+</div>
+

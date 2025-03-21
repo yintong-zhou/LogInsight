@@ -1,6 +1,6 @@
 ﻿using System.Web;
 using System.Web.Optimization;
-
+   
 namespace LogInsight.Web
 {
     public class BundleConfig
@@ -9,7 +9,6 @@ namespace LogInsight.Web
         public static void RegisterBundles(BundleCollection bundles)
         {
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
-                        "~/Scripts/site.js",
                         "~/Scripts/jquery-{version}.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
@@ -20,12 +19,20 @@ namespace LogInsight.Web
             bundles.Add(new ScriptBundle("~/bundles/modernizr").Include(
                         "~/Scripts/modernizr-*"));
 
-            bundles.Add(new Bundle("~/bundles/bootstrap").Include(
-                      "~/Scripts/bootstrap.bundle.js"));
+            bundles.Add(new Bundle("~/bundles/js").Include(
+                      "~/Scripts/bootstrap.bundle.min.js",
+                      "~/Scripts/datatables/dataTables.js",
+                      "~/Scripts/datatables/dataTables.bootstrap5.js",
+                      "~/Scripts/datatables/dataTables.buttons.js",
+                      "~/Scripts/datatables/buttons.dataTables.js",
+                      "~/Scripts/datatables/buttons.colVis.min.js",
+                      "~/Scripts/site.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
-                      "~/Content/bootstrap.css",
+                      "~/Content/bootstrap.min.css",
                       "~/Content/bootstrap-icons.min.css",
+                      "~/Content/datatables/dataTables.bootstrap5.css",
+                      "~/Content/datatables/buttons.dataTables.css",
                       "~/Content/site.css"));
         }
     }

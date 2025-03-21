@@ -1,0 +1,25 @@
+﻿@model LogInsight.Web.Models.LogData
+
+<div class="search-filter-group">
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <label for="level" class="text-gray-700">Level:</label>
+            <select id="level" class="form-select">
+                <option value="">All</option>
+                <option value="info">Info</option>
+                <option value="warning">Warning</option>
+                <option value="error">Error</option>
+            </select>
+        </div>
+        <div class="col-md-6">
+            <label for="date" class="text-gray-700">Date:</label>
+            <input type="date" id="date" class="form-control" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="justify-content-center">
+            <button id="filter" class="btn btn-sm btn-primary">Filter</button>
+            <button id="reset" class="btn btn-sm btn-secondary ms-2">Reset</button>
+        </div>
+    </div>
+</div>
