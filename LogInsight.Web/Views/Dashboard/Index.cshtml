@@ -1,0 +1,56 @@
+﻿@model LogInsight.Web.Models.LogData
+
+@{
+    ViewBag.Title = "View";
+}
+
+<div class="dash-container">
+    <div class="text-center mb-5">
+        <h3>Event Alerts</h3>
+        <p class="lead">
+            All alerts in @System.Configuration.ConfigurationManager.AppSettings["AppName"]
+        </p>
+    </div>
+
+    <div class="row g-4 ml-5 justify-content-center">
+        <div class="col-md-4 col-lg-4 shadow">
+            <div class="card h-100 bg-danger-subtle">
+                <div class="card-body">
+                    <h2 class="card-title d-flex align-items-center gap-2 h5 mb-3">
+                        <i class="bi bi-radioactive"></i> <strong>ERROR</strong>
+                    </h2>
+                    <p class="card-text">Total Event: @Model.countList[2].Count</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 col-lg-4 shadow">
+            <div class="card h-100 bg-warning-subtle">
+                <div class="card-body">
+                    <h2 class="card-title d-flex align-items-center gap-2 h5 mb-3">
+                        <i class="bi bi-exclamation-circle-fill"></i> <strong>WARNING</strong>
+                    </h2>
+                    <p class="card-text">Total Event: @Model.countList[1].Count</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 col-lg-4 shadow">
+            <div class="card h-100 bg-primary-subtle">
+                <div class="card-body">
+                    <h2 class="card-title d-flex align-items-center gap-2 h5 mb-3">
+                        <i class="bi bi-info-circle-fill"></i> <strong>INFORMATION</strong>
+                    </h2>
+                    <p class="card-text">Total Event: @Model.countList[0].Count</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <hr />
+
+    <div class="g-4 ml-5 justify-content-center">
+
+    </div>
+</div>
+

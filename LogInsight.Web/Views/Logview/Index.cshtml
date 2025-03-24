@@ -11,28 +11,3 @@
 
     @Html.Partial("_LogTable", Model)
 </div>
-
-@*<script type="text/javascript">
-    if ($('#date').val() == '' || $('#level').val() == '') {
-        alert('Please compile the filter form');
-
-    } else {
-        var formData = {
-            level: $('#level').val(),
-            datetime: $('#date').val()
-        }
-
-        $.ajax({
-            url: baseUrl + "/Logview",
-            type: 'GET',
-            data: formData,
-            success: function (data) {
-                console.log(data);
-                $("#log-container").html(data);
-            },
-            error: function (error) {
-                alert(error);
-            }
-        });
-    }
-</script>*@
