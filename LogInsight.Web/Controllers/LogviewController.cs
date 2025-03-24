@@ -9,26 +9,22 @@ namespace LogInsight.Web.Controllers
 {
     public class LogviewController : Controller
     {
-        // GET: Logview
+        [HttpGet]
         public ActionResult Index(LogData _logData)
         {
-            if(_logData == null) _logData = new LogData();
-            if(_logData.logList == null) _logData.logList = new List<LogData>();
-           
             var logs = Event.ReadFromFile(true);
-            if (logs != null)
+
+            foreach (var log in logs)
             {
-                foreach (var log in logs)
+                _logData.logList.Add(new LogData
                 {
-                    _logData.logList.Add(new LogData
-                    {
-                        DateTime = log.DateTime,
-                        Level = log.LogEntryType,
-                        AppName = log.AppName,
-                        Source = log.Source,
-                        Message = log.Message
-                    });
-                }
+                    DateTime = log.DateTime,
+                    Level = log.LogEntryType,
+                    AppName = log.AppName,
+                    Source = log.Source,
+                    Context = log.Context,
+                    Message = log.Message
+                });
             }
 
             return View(_logData);

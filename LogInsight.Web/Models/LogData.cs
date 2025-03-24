@@ -9,11 +9,17 @@ namespace LogInsight.Web.Models
     public class LogData
     {
         public int Id { get; set; }
-        public DateTime DateTime { get; set; }
+        public DateTime DateTime { get; set; } = DateTime.MinValue;
         public string Level { get; set; }
         public string AppName { get; set; }
         public string Source { get; set; }
+        public string Context { get; set; }
         public string Message { get; set; }
         public List<LogData> logList { get; set; }
+
+        public LogData()
+        {
+            logList = new List<LogData>();
+        }
     }
 }

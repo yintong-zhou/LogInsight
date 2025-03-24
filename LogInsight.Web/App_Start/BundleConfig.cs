@@ -1,6 +1,6 @@
 ﻿using System.Web;
 using System.Web.Optimization;
-   
+
 namespace LogInsight.Web
 {
     public class BundleConfig
@@ -20,13 +20,13 @@ namespace LogInsight.Web
                         "~/Scripts/modernizr-*"));
 
             bundles.Add(new Bundle("~/bundles/js").Include(
+                      "~/Scripts/site.js",
                       "~/Scripts/bootstrap.bundle.min.js",
                       "~/Scripts/datatables/dataTables.js",
                       "~/Scripts/datatables/dataTables.bootstrap5.js",
                       "~/Scripts/datatables/dataTables.buttons.js",
                       "~/Scripts/datatables/buttons.dataTables.js",
-                      "~/Scripts/datatables/buttons.colVis.min.js",
-                      "~/Scripts/site.js"));
+                      "~/Scripts/datatables/buttons.colVis.min.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.min.css",

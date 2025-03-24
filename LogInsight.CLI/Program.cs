@@ -48,13 +48,13 @@ namespace LogInsight.CLI
                 {
                     Event.UseSource();
                     Console.WriteLine("Logging INFORMATION");
-                    Event.WriteLog("Logging INFORMATION", EventLogEntryType.Information);
+                    Event.WriteLog("Logging INFORMATION", EventLogEntryType.Information, "Code Context 1");
 
                     Console.WriteLine("Logging WARNING");
-                    Event.WriteLog("Logging WARNING", EventLogEntryType.Warning);
+                    Event.WriteLog("Logging WARNING", EventLogEntryType.Warning, "Code Context 2");
 
                     Console.WriteLine("Logging ERROR");
-                    Event.WriteLog("Logging ERROR", EventLogEntryType.Error);
+                    Event.WriteLog("Logging ERROR", EventLogEntryType.Error, "Code Context 1");
 
                     Console.WriteLine($"Done! Check in Event Viewer and here: {Environment.CurrentDirectory}\\");
                 }
@@ -73,7 +73,7 @@ namespace LogInsight.CLI
                         var events = Event.ReadFromFile();
                         foreach (var item in events)
                         {
-                            Console.WriteLine($"{item.DateTime} [{item.LogEntryType}] {item.Source}|{item.AppName}|{item.Message}");
+                            Console.WriteLine($"{item.DateTime} [{item.LogEntryType}] {item.Source}|{item.AppName}|{item.Context}|{item.Message}");
                         }
                     }
                     else

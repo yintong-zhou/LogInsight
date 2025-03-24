@@ -8,6 +8,10 @@
     <link href="~/Content/fonts/Gidole-Regular.ttf" rel="stylesheet" />
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
+
+    <script type="text/javascript">
+        var baseUrl = '@Url.Content("~/")';
+    </script>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
@@ -39,7 +43,7 @@
         @RenderBody()
     </div>
 
-    <footer class="fixed-bottom py-1 m-1">
+    <footer class="sticky-bottom py-1 m-1">
         <div class="container text-center">
             &copy; @DateTime.Now.Year Log Insight
         </div>

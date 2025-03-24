@@ -64,7 +64,7 @@ namespace LogInsight
         /// <summary>
         /// Write in Event Viewer and file
         /// </summary>
-        public static void WriteLog(string message, EventLogEntryType type)
+        public static void WriteLog(string message, EventLogEntryType type, string context = null)
         {
 
             bool inEventViewer = bool.Parse(ConfigurationManager.AppSettings["EnableEventViewer"]);
@@ -82,7 +82,7 @@ namespace LogInsight
                 }
                 else
                 {
-                    LogToFile(message, type, AppName, Environment.MachineName);
+                    LogToFile(message, type, AppName, Environment.MachineName, context);
                 }
                
             }
@@ -101,7 +101,7 @@ namespace LogInsight
                 if (!File.Exists(fullDir))
                 {
                     //DATETIME|TYPE|SOURCE|APPNAME|MESSAGE
-                    File.AppendAllText($"{Environment.CurrentDirectory}\\{FallbackLogFile}", $"DATETIME|TYPE|SOURCE|APP|MESSAGE{Environment.NewLine}");
+                    File.AppendAllText($"{Environment.CurrentDirectory}\\{FallbackLogFile}", $"DATETIME|TYPE|SOURCE|APP|CONTEXT|MESSAGE{Environment.NewLine}");
                 }
             }
             catch (Exception ex)
@@ -110,12 +110,12 @@ namespace LogInsight
             }
         }
 
-        internal static void LogToFile(string message, EventLogEntryType type, string appName = null, string source = null)
+        internal static void LogToFile(string message, EventLogEntryType type, string appName = null, string source = null, string context = null)
         {
             try
             {
                 //CheckLogFile();
-                File.AppendAllText($"{Environment.CurrentDirectory}\\{FallbackLogFile}", $"{DateTime.Now}|{type}|{source}|{appName}|{message}{Environment.NewLine}"); 
+                File.AppendAllText($"{Environment.CurrentDirectory}\\{FallbackLogFile}", $"{DateTime.Now}|{type}|{source}|{appName}|{context}|{message}{Environment.NewLine}"); 
             }
             catch (Exception ex)
             {
@@ -183,7 +183,8 @@ namespace LogInsight
                         LogEntryType = parts[1],
                         Source = parts[2],
                         AppName = parts[3],
-                        Message = parts[4],
+                        Context = parts[4],
+                        Message = parts[5],
                     });
                 }
 
