@@ -2,7 +2,7 @@
     var logTable = new DataTable('#log-table',
         {
             "dom": "",
-            "order": [[0, 'desc']],
+            "order": [[1, 'desc']],
             "paging": true,
             "searching": true,
             "ordering": true,
@@ -16,8 +16,8 @@
             var selectedLevel = $('#level').val().toUpperCase();
             var selectedDate = $('#date').val();
             // data[1] is the Level column
-            var rowLevel = data[1];
-            var rowDate = data[0]; // Time column
+            var rowLevel = data[0];
+            var rowDate = data[1]; // Time column
 
             // Date formatting for comparison
             var rowDateFormatted = rowDate.split(' ')[0]; // Get only the date part

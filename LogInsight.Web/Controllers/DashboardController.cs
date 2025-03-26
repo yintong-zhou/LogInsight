@@ -1,6 +1,7 @@
 ﻿using LogInsight.Web.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -10,10 +11,11 @@ namespace LogInsight.Web.Controllers
     public class DashboardController : Controller
     {
         [HttpGet]
-        public ActionResult Index(LogData _logData)
+        public ActionResult Index(LogData _logData) 
         {
             var logs = Event.ReadFromFile(true);
-            
+            _logData.FileSize = (new FileInfo(Event.FallbackLogFile).Length / 1024); // bytes
+
             foreach (var log in logs) {
                 _logData.logList.Add(new LogData
                 {

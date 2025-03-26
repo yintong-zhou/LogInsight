@@ -15,6 +15,7 @@ namespace LogInsight.Web.Models
         public string Source { get; set; }
         public string Context { get; set; }
         public string Message { get; set; }
+        public long FileSize { get; set; }
         public List<LogData> logList { get; set; }
         public List<LogCount> countList { get; set; }
 

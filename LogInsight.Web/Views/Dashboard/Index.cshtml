@@ -2,13 +2,15 @@
 
 @{
     ViewBag.Title = "View";
+
+    double kb = Model.FileSize / 1024;
 }
 
 <div class="dash-container">
     <div class="text-center mb-5">
         <h3>Event Alerts</h3>
         <p class="lead">
-            All alerts in @System.Configuration.ConfigurationManager.AppSettings["AppName"]
+            All alerts in @System.Configuration.ConfigurationManager.AppSettings["AppName"] (@Model.FileSize bytes)
         </p>
     </div>
 
