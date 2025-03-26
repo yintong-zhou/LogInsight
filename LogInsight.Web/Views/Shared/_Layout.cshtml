@@ -11,6 +11,9 @@
 
     <script type="text/javascript">
         var baseUrl = '@Url.Content("~/")';
+        function reloadPage() {
+            window.location.reload();
+        }
     </script>
 </head>
 <body>
@@ -33,7 +36,7 @@
                     </li>
                 </ul>
                 <span class="navbar-text">
-                    <a href="#"><i class="bi bi-arrow-clockwise"></i></a>
+                   <button class="border-0 bg-transparent" onclick="reloadPage()"><i class="bi bi-arrow-clockwise"></i></button>
                 </span>
             </div>
         </div>
@@ -43,14 +46,9 @@
         @RenderBody()
     </div>
 
-    <footer class="py-1 m-1">
-        <div class="container text-center">
-            &copy; @DateTime.Now.Year Log Insight
-        </div>
-    </footer>
-
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/js")
     @RenderSection("scripts", required: false)
+
 </body>
 </html>
