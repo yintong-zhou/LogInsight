@@ -11,7 +11,7 @@
             <th>Message</th>
 </thead>
     <tbody class="table-group-divider">
-        @foreach (var log in Model.logList)
+        @foreach (var log in Model.Logs)
         {
             <tr>
                 @if (log.Level.ToUpper() == "INFORMATION")

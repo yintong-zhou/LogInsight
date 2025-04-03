@@ -16,13 +16,13 @@ namespace LogInsight.Web.Models
         public string Context { get; set; }
         public string Message { get; set; }
         public long FileSize { get; set; }
-        public List<LogData> logList { get; set; }
-        public List<LogCount> countList { get; set; }
+        public List<LogData> Logs { get; set; }
+        public List<LogCount> Counts { get; set; }
 
         public LogData()
         {
-            logList = new List<LogData>();
-            countList = new List<LogCount>();
+            Logs = new List<LogData>();
+            Counts = new List<LogCount>();
         }
     }
 
