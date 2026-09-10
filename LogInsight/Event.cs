@@ -14,17 +14,48 @@ namespace LogInsight
         /// <summary>
         /// Event Viewer log name
         /// </summary>
-        public static string WinLogName = "Application";
+        public static string WinLogName = GetAppSetting("WinLogName", "Application");
 
         /// <summary>
         /// Application name from config file
         /// </summary>
-        public static string AppName = ConfigurationManager.AppSettings["AppName"];
+        public static string AppName = GetAppSetting("AppName", "LogInsight");
 
         /// <summary>
         /// Local log file name
         /// </summary>
-        public static string FallbackLogFile = ConfigurationManager.AppSettings["LogDirectory"];
+        public static string FallbackLogFile = GetAppSetting("LogDirectory", "Logs.txt");
+
+        private static string GetAppSetting(string key, string defaultValue)
+        {
+            string value = ConfigurationManager.AppSettings[key];
+            return string.IsNullOrWhiteSpace(value) ? defaultValue : value;
+        }
+
+        private static string GetLogFilePath()
+        {
+            return Path.IsPathRooted(FallbackLogFile)
+                ? FallbackLogFile
+                : Path.Combine(Environment.CurrentDirectory, FallbackLogFile);
+        }
+
+        private static bool IsEventViewerEnabled()
+        {
+            bool enabled;
+            return bool.TryParse(ConfigurationManager.AppSettings["EnableEventViewer"], out enabled) && enabled;
+        }
+
+        private static void TryLogToFile(string message, EventLogEntryType type, string appName, string source, string context = null)
+        {
+            try
+            {
+                LogToFile(message, type, appName, source, context);
+            }
+            catch (Exception logException)
+            {
+                Console.WriteLine($"Unable to write fallback log: {logException.Message}");
+            }
+        }
 
         /// <summary>
         /// Create Event Source if not exists
@@ -36,24 +67,24 @@ namespace LogInsight
                 if (!EventLog.SourceExists(AppName))
                 {
                     EventLog.CreateEventSource(AppName, WinLogName);
-                    LogToFile($"Event Source created.", EventLogEntryType.Information, AppName, Environment.MachineName);
+                    TryLogToFile($"Event Source created.", EventLogEntryType.Information, AppName, Environment.MachineName);
                     return;
                 }
             }
             catch (SecurityException ex)
             {
                 Console.WriteLine("Need permission to write on Event Viewer.");
-                LogToFile($"SecurityException: {ex.Message}", EventLogEntryType.Error, AppName, Environment.MachineName);
+                TryLogToFile($"SecurityException: {ex.Message}", EventLogEntryType.Error, AppName, Environment.MachineName);
             }
             catch (UnauthorizedAccessException ex)
             {
                 Console.WriteLine("Access negated. Run as Administrator");
-                LogToFile($"UnauthorizedAccessException: {ex.Message}", EventLogEntryType.Error, AppName, Environment.MachineName);
+                TryLogToFile($"UnauthorizedAccessException: {ex.Message}", EventLogEntryType.Error, AppName, Environment.MachineName);
             }
             catch (Exception ex)
             {
                 Console.WriteLine("Logging error.");
-                LogToFile($"Exception: {ex.Message}", EventLogEntryType.Error, AppName, Environment.MachineName);
+                TryLogToFile($"Exception: {ex.Message}", EventLogEntryType.Error, AppName, Environment.MachineName);
             }
         }
 
@@ -67,7 +98,7 @@ namespace LogInsight
         public static void WriteLog(string message, EventLogEntryType type, string context = null)
         {
 
-            bool inEventViewer = bool.Parse(ConfigurationManager.AppSettings["EnableEventViewer"]);
+            bool inEventViewer = IsEventViewerEnabled();
             try
             {
 
@@ -77,7 +108,7 @@ namespace LogInsight
                     {
                         eventLog.Source = AppName;
                         eventLog.WriteEntry(message, type);
-                        LogToFile(message, type, AppName, Environment.MachineName);
+                        LogToFile(message, type, AppName, Environment.MachineName, context);
                     }
                 }
                 else
@@ -88,20 +119,25 @@ namespace LogInsight
             }
             catch (Exception ex)
             {
-                LogToFile($"Impossible to write in Event Viewer. Logs saved on file. {ex.Message}", EventLogEntryType.Error, AppName, Environment.MachineName);
+                TryLogToFile($"Impossible to write in Event Viewer. Original message: {message}. {ex.Message}", type, AppName, Environment.MachineName, context);
             }
         }
 
         internal static void CheckLogFile()
         {
-            string fullDir = $"{Environment.CurrentDirectory}\\{FallbackLogFile}";
+            string fullPath = GetLogFilePath();
 
             try
             {
-                if (!File.Exists(fullDir))
+                string directory = Path.GetDirectoryName(fullPath);
+                if (!string.IsNullOrEmpty(directory))
                 {
-                    //DATETIME|TYPE|SOURCE|APPNAME|MESSAGE
-                    File.AppendAllText($"{Environment.CurrentDirectory}\\{FallbackLogFile}", $"DATETIME|TYPE|SOURCE|APP|CONTEXT|MESSAGE{Environment.NewLine}");
+                    Directory.CreateDirectory(directory);
+                }
+
+                if (!File.Exists(fullPath))
+                {
+                    File.AppendAllText(fullPath, $"DATETIME|TYPE|SOURCE|APP|CONTEXT|MESSAGE{Environment.NewLine}");
                 }
             }
             catch (Exception ex)
@@ -114,8 +150,8 @@ namespace LogInsight
         {
             try
             {
-                //CheckLogFile();
-                File.AppendAllText($"{Environment.CurrentDirectory}\\{FallbackLogFile}", $"{DateTime.Now}|{type}|{source}|{appName}|{context}|{message}{Environment.NewLine}"); 
+                CheckLogFile();
+                File.AppendAllText(GetLogFilePath(), $"{DateTime.Now}|{type}|{source}|{appName}|{context}|{message}{Environment.NewLine}");
             }
             catch (Exception ex)
             {
@@ -161,7 +197,7 @@ namespace LogInsight
                 WriteLog(ex.Message, EventLogEntryType.Error);
             }
 
-            return null;
+            return new List<LogData>();
         }
 
         public static List<LogData> ReadFromFile(bool ignoreDefaultPath = false)
@@ -169,17 +205,25 @@ namespace LogInsight
             try
             {
                 List<LogData> data = new List<LogData>();
-                string[] lines = { };
-                if (ignoreDefaultPath)
-                    lines = File.ReadAllLines($"{ConfigurationManager.AppSettings["LogDirectory"]}");
-                else lines = File.ReadAllLines($"{Environment.CurrentDirectory}\\{FallbackLogFile}");
+                string[] lines = File.ReadAllLines(GetLogFilePath());
 
                 foreach (var line in lines)
                 {
-                    string[] parts = line.Split('|');
+                    if (string.IsNullOrWhiteSpace(line) || line.StartsWith("DATETIME|", StringComparison.Ordinal))
+                    {
+                        continue;
+                    }
+
+                    string[] parts = line.Split(new[] { '|' }, 6);
+                    DateTime logDateTime;
+                    if (parts.Length != 6 || !DateTime.TryParse(parts[0], out logDateTime))
+                    {
+                        continue;
+                    }
+
                     data.Add(new LogData
                     {
-                        DateTime = Convert.ToDateTime(parts[0]),
+                        DateTime = logDateTime,
                         LogEntryType = parts[1],
                         Source = parts[2],
                         AppName = parts[3],
@@ -192,10 +236,10 @@ namespace LogInsight
             }
             catch (Exception ex)
             {
-                WriteLog(ex.Message, EventLogEntryType.Error);
+                TryLogToFile($"Impossible to read local log file: {ex.Message}", EventLogEntryType.Error, AppName, Environment.MachineName);
             }
 
-            return null;
+            return new List<LogData>();
         }
     }
 }
